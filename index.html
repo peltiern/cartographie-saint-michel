@@ -21,7 +21,7 @@
 <div id="map"></div>
 <script>var map = L.map('map', {attributionControl: false}).setView([45.641, 0.121589], 16);
 L.control.attribution({prefix: false}).addTo(map);
-var tilesource_layer = L.tileLayer('file:////home/npeltier/Cartographie/saint-michel/tuiles/1922/{z}/{x}/{y}.png', {
+var tilesource_layer = L.tileLayer('https://github.com/peltiern/cartographie-saint-michel/raw/main/1922/{z}/{x}/{y}.png', {
     minZoom: 12,
     maxZoom: 20,
     tms: false,
@@ -29,3 +29,4 @@ var tilesource_layer = L.tileLayer('file:////home/npeltier/Cartographie/saint-mi
 }).addTo(map);</script>
 </body>
 </html>
+
