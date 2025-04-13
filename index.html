@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Leaflet Cartographie</title>
+    <title>Cartographie de Saint-Michel (16470 - France)</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico"/>
     <link rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             crossorigin=""></script>
+    <!--    <script src="https://cdn.jsdelivr.net/npm/osmtogeojson@3.0.0/osmtogeojson.min.js"></script>-->
+
     <style>
         html, body, #map {
             height: 100%;
@@ -23,7 +26,7 @@
             width: 220px;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             font-family: sans-serif;
             font-size: 13px;
             z-index: 1000;
@@ -75,8 +78,8 @@
         content.style.display = content.style.display === "none" ? "block" : "none";
     }
 
-    const map = L.map('map', { attributionControl: false }).setView([45.641, 0.121589], 16);
-    L.control.attribution({ prefix: false }).addTo(map);
+    const map = L.map('map', {attributionControl: false}).setView([45.641, 0.121589], 16);
+    L.control.attribution({prefix: false}).addTo(map);
 
     const layers = [
         {
@@ -85,7 +88,8 @@
                 maxZoom: 18,
                 attribution: '© OpenStreetMap'
             }).addTo(map),
-            defaultOpacity: 1
+            defaultOpacity: 1,
+            controlOpacity: true
         },
         {
             name: "IGN Orthophotos",
@@ -102,7 +106,8 @@
                     tileSize: 256
                 }
             ).addTo(map),
-            defaultOpacity: 1
+            defaultOpacity: 1,
+            controlOpacity: true
         },
         {
             name: "Carte 1922",
@@ -110,15 +115,37 @@
                 minZoom: 12,
                 maxZoom: 18,
                 tms: false,
-                attribution: 'Créé avec QGIS | Nicolas PELTIER'
+                attribution: 'Créé avec QGIS | Nicolas PELTIER | Blason par <a href="//commons.wikimedia.org/wiki/User:Celbusro" title="User:Celbusro">Celbusro</a> — <span class="int-own-work" lang="fr">Travail personnel</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=35491899">Lien</a>'
             }).addTo(map),
-            defaultOpacity: 1
+            defaultOpacity: 1,
+            controlOpacity: true
         }
     ];
 
+    // Définir les marqueurs prédéfinis
+    var eglise = L.marker([45.6423319, 0.1056722]).bindPopup('Eglise');
+    var ecolePrimaire = L.marker([45.6403061, 0.1082331]).bindPopup('Ecole primaire');
+    var centreCommercial = L.marker([45.6373693, 0.1117523]).bindPopup('Centre commercial');
+    var stade = L.marker([45.6347353, 0.1151324]).bindPopup('Stade');
+    var college = L.marker([45.6376276, 0.1160621]).bindPopup('Collège');
+
+    // Créer un groupe de marqueurs
+    var predefinedMarkers = L.layerGroup([eglise, ecolePrimaire, centreCommercial, stade, college]);
+
+    // Ajouter la couche à la carte (elle sera ajoutée par défaut)
+    predefinedMarkers.addTo(map);
+
+    // Ajout d'une nouvelle couche à la liste des couches
+    layers.push({
+        name: "Points remarquables",
+        layer: predefinedMarkers,
+        defaultOpacity: 1,
+        controlOpacity: false
+    });
+
     const controlContainer = document.getElementById("layerControl");
 
-    layers.forEach(({ name, layer, defaultOpacity }, index) => {
+    layers.forEach(({name, layer, defaultOpacity, controlOpacity}, index) => {
         const group = document.createElement("div");
         group.className = "layer-group";
 
@@ -127,39 +154,85 @@
         checkbox.checked = true;
         checkbox.id = `layer-${index}`;
 
+        const slider = document.createElement("input");
+
         const label = document.createElement("label");
         label.htmlFor = checkbox.id;
         label.innerHTML = `<span>${name}</span>`;
         label.prepend(checkbox);
-
-        const slider = document.createElement("input");
-        slider.type = "range";
-        slider.min = 0;
-        slider.max = 1;
-        slider.step = 0.01;
-        slider.value = defaultOpacity;
+        group.appendChild(label);
 
         checkbox.onchange = () => {
             if (checkbox.checked) {
-                layer.setOpacity(parseFloat(slider.value));
+                if (controlOpacity) {
+                    layer.setOpacity(parseFloat(slider.value));
+                } else {
+                    layer.addTo(map); // Ajouter les marqueurs ou autres couches à la carte
+                }
             } else {
-                layer.setOpacity(0);
+                if (controlOpacity) {
+                    layer.setOpacity(0); // Retirer l'opacité
+                } else {
+                    map.removeLayer(layer); // Retirer les marqueurs ou autres couches de la carte
+                }
             }
         };
 
-        slider.oninput = () => {
-            if (checkbox.checked) {
-                layer.setOpacity(parseFloat(slider.value));
-            }
-        };
+        if (controlOpacity) {
+            slider.type = "range";
+            slider.min = 0;
+            slider.max = 1;
+            slider.step = 0.01;
+            slider.value = defaultOpacity;
 
-        // Set initial opacity
-        layer.setOpacity(defaultOpacity);
+            slider.oninput = () => {
+                if (checkbox.checked) {
+                    layer.setOpacity(parseFloat(slider.value));
+                }
+            };
 
-        group.appendChild(label);
-        group.appendChild(slider);
+            group.appendChild(slider);
+        }
+
+        // Set initial opacity si c'est une couche de type GeoJSON
+        if (controlOpacity) {
+            layer.setOpacity(defaultOpacity);
+        }
+
         controlContainer.appendChild(group);
     });
+
+    //   // Charger les rues depuis Overpass API via osmtogeojson
+    //   const overpassUrl = 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(`
+    //   [out:json][timeout:25];
+    //   (
+    //     way["highway"](45.63, 0.10, 45.65, 0.14);
+    //   );
+    //   out body;
+    //   >;
+    //   out skel qt;
+    // `);
+    //
+    //   fetch(overpassUrl)
+    //       .then(r => r.json())
+    //       .then(osmData => osmtogeojson(osmData))
+    //       .then(geojson => {
+    //           const rueLayer = L.geoJSON(geojson, {
+    //               style: { color: "#ff6600", weight: 1.5 },
+    //               onEachFeature: (feature, layer) => {
+    //                   if (feature.properties.name) {
+    //                       layer.bindPopup(feature.properties.name);
+    //                   }
+    //               }
+    //           }).addTo(map);
+    //           layers.push({ name: "Rues OSM", layer: rueLayer });
+    //           addLayerControl({ name: "Rues OSM", layer: rueLayer });
+    //       });
+    //
+    //   // Charger osmtogeojson
+    //   const script = document.createElement('script');
+    //   script.src = "https://rawcdn.githack.com/tyrasd/osmtogeojson/gh-pages/osmtogeojson.js";
+    //   document.head.appendChild(script);
 </script>
 </body>
 </html>
