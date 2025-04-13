@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <title>Cartographie de Saint-Michel (16470 - France)</title>
     <meta charset="utf-8"/>
@@ -10,6 +10,9 @@
           crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             crossorigin=""></script>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'
+          rel='stylesheet'/>
     <!--    <script src="https://cdn.jsdelivr.net/npm/osmtogeojson@3.0.0/osmtogeojson.min.js"></script>-->
 
     <style>
@@ -45,10 +48,6 @@
             display: block;
         }
 
-        .layer-group {
-            margin-bottom: 10px;
-        }
-
         .layer-group label {
             display: flex;
             justify-content: space-between;
@@ -67,9 +66,7 @@
 <!-- Panneau de contrôle -->
 <div class="control-panel">
     <div class="control-header" onclick="togglePanel()">🗺️ Couches</div>
-    <div class="control-content" id="layerControl">
-        <!-- Contenu généré dynamiquement -->
-    </div>
+    <div class="control-content" id="layerControl"></div>
 </div>
 
 <script>
@@ -78,8 +75,22 @@
         content.style.display = content.style.display === "none" ? "block" : "none";
     }
 
-    const map = L.map('map', {attributionControl: false}).setView([45.641, 0.121589], 16);
+    const map = L.map('map', {
+        attributionControl: false,
+        zoomControl: false
+    }).setView([45.637987, 0.118228], 16);
     L.control.attribution({prefix: false}).addTo(map);
+    L.control.zoom({
+            zoomInTitle: 'Zoom +',
+            zoomOutTitle: 'Zoom -'
+        }
+    ).addTo(map);
+    map.addControl(new L.Control.Fullscreen({
+        title: {
+            'false': 'Voir en plein écran',
+            'true': 'Sortir du plein écran'
+        }
+    }));
 
     const layers = [
         {
@@ -88,7 +99,7 @@
                 maxZoom: 18,
                 attribution: '© OpenStreetMap'
             }).addTo(map),
-            defaultOpacity: 1,
+            defaultOpacity: 0,
             controlOpacity: true
         },
         {
@@ -115,31 +126,63 @@
                 minZoom: 12,
                 maxZoom: 18,
                 tms: false,
-                attribution: 'Créé avec QGIS | Nicolas PELTIER | Blason par <a href="//commons.wikimedia.org/wiki/User:Celbusro" title="User:Celbusro">Celbusro</a> — <span class="int-own-work" lang="fr">Travail personnel</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=35491899">Lien</a>'
+                attribution: 'Créé avec QGIS | Nicolas PELTIER | Blason par <a href="//commons.wikimedia.org/wiki/User:Celbusro" title="User:Celbusro" target="_blank">Celbusro</a> — <span class="int-own-work" lang="fr">Travail personnel</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0" target="_blank">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=35491899" target="_blank">Lien</a>'
             }).addTo(map),
             defaultOpacity: 1,
             controlOpacity: true
         }
     ];
 
-    // Définir les marqueurs prédéfinis
-    var eglise = L.marker([45.6423319, 0.1056722]).bindPopup('Eglise');
-    var ecolePrimaire = L.marker([45.6403061, 0.1082331]).bindPopup('Ecole primaire');
-    var centreCommercial = L.marker([45.6373693, 0.1117523]).bindPopup('Centre commercial');
-    var stade = L.marker([45.6347353, 0.1151324]).bindPopup('Stade');
-    var college = L.marker([45.6376276, 0.1160621]).bindPopup('Collège');
+    // Points remarquables (https://apidocs.geoapify.com/playground/icon/)
+    var iconeEglise = L.icon({
+        iconUrl: '/icones/eglise.png',
+        iconSize: [37, 56],
+        iconAnchor: [18, 56],
+        popupAnchor: [0, -40],
+    });
+    var iconeEcolePrimaire = L.icon({
+        iconUrl: '/icones/ecole-primaire.png',
+        iconSize: [37, 56],
+        iconAnchor: [18, 56],
+        popupAnchor: [0, -40],
+    });
+    var iconeCentreCommercial = L.icon({
+        iconUrl: '/icones/centre-commercial.png',
+        iconSize: [37, 56],
+        iconAnchor: [18, 56],
+        popupAnchor: [0, -40],
+    });
+    var iconeStade = L.icon({
+        iconUrl: '/icones/stade.png',
+        iconSize: [37, 56],
+        iconAnchor: [18, 56],
+        popupAnchor: [0, -40],
+    });
+    var iconeCollege = L.icon({
+        iconUrl: '/icones/college.png',
+        iconSize: [37, 56],
+        iconAnchor: [18, 56],
+        popupAnchor: [0, -40],
+    });
+    var iconeHopital = L.icon({
+        iconUrl: '/icones/hopital.png',
+        iconSize: [37, 56],
+        iconAnchor: [18, 56],
+        popupAnchor: [0, -40],
+    });
 
-    // Créer un groupe de marqueurs
-    var predefinedMarkers = L.layerGroup([eglise, ecolePrimaire, centreCommercial, stade, college]);
+    var eglise = L.marker([45.6423319, 0.1056722], {icon: iconeEglise}).bindPopup('Eglise');
+    var ecolePrimaire = L.marker([45.6403061, 0.1082331], {icon: iconeEcolePrimaire}).bindPopup('Ecole primaire');
+    var centreCommercial = L.marker([45.6373693, 0.1117523], {icon: iconeCentreCommercial}).bindPopup('Centre commercial');
+    var stade = L.marker([45.6347353, 0.1151324], {icon: iconeStade}).bindPopup('Stade');
+    var college = L.marker([45.6376276, 0.1160621], {icon: iconeCollege}).bindPopup('Collège');
+    var hopital = L.marker([45.6354325, 0.1199615], {icon: iconeHopital}).bindPopup('Hôpital Girac');
 
-    // Ajouter la couche à la carte (elle sera ajoutée par défaut)
-    predefinedMarkers.addTo(map);
-
-    // Ajout d'une nouvelle couche à la liste des couches
+    var keyPoints = L.layerGroup([eglise, ecolePrimaire, centreCommercial, stade, college, hopital]);
     layers.push({
         name: "Points remarquables",
-        layer: predefinedMarkers,
-        defaultOpacity: 1,
+        layer: keyPoints,
+        defaultOpacity: 0,
         controlOpacity: false
     });
 
@@ -151,7 +194,7 @@
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.checked = true;
+        checkbox.checked = defaultOpacity === 1;
         checkbox.id = `layer-${index}`;
 
         const slider = document.createElement("input");
@@ -167,13 +210,13 @@
                 if (controlOpacity) {
                     layer.setOpacity(parseFloat(slider.value));
                 } else {
-                    layer.addTo(map); // Ajouter les marqueurs ou autres couches à la carte
+                    layer.addTo(map);
                 }
             } else {
                 if (controlOpacity) {
-                    layer.setOpacity(0); // Retirer l'opacité
+                    layer.setOpacity(0);
                 } else {
-                    map.removeLayer(layer); // Retirer les marqueurs ou autres couches de la carte
+                    map.removeLayer(layer);
                 }
             }
         };
