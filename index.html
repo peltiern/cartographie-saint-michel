@@ -43,6 +43,12 @@
             border-bottom: 1px solid #ccc;
         }
 
+        .icon-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .control-content {
             padding: 8px 12px;
             display: block;
@@ -65,7 +71,14 @@
 
 <!-- Panneau de contrôle -->
 <div class="control-panel">
-    <div class="control-header" onclick="togglePanel()">🗺️ Couches</div>
+    <div class="control-header" onclick="togglePanel()">
+    <span class="icon-text">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25" fill="#000">
+        <path d="M3.5 9.5L12 14l8.5-4.5L12 5 3.5 9.5zM12 15.5l-8.5-4.5v2l8.5 4.5 8.5-4.5v-2l-8.5 4.5zM12 19.5l-8.5-4.5v2l8.5 4.5 8.5-4.5v-2l-8.5 4.5z"/>
+      </svg>
+      <span>Couches</span>
+    </span>
+    </div>
     <div class="control-content" id="layerControl"></div>
 </div>
 
@@ -92,18 +105,38 @@
         }
     }));
 
+    // Blason
+    L.Control.Watermark = L.Control.extend({
+        onAdd: function(map) {
+            var img = L.DomUtil.create('img');
+
+            img.src = './icones/blason-saint-michel.svg';
+            img.style.width = '50px';
+
+            return img;
+        },
+
+        onRemove: function(map) {
+            // Nothing to do here
+        }
+    });
+    L.control.watermark = function(opts) {
+        return new L.Control.Watermark(opts);
+    }
+    L.control.watermark({ position: 'bottomleft' }).addTo(map);
+
     const layers = [
         {
             name: "OpenStreetMap",
             layer: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
+                maxZoom: 19,
                 attribution: '© OpenStreetMap'
             }).addTo(map),
             defaultOpacity: 0,
             controlOpacity: true
         },
         {
-            name: "IGN Orthophotos",
+            name: "Photos actuelles",
             layer: L.tileLayer(
                 "https://data.geopf.fr/wmts?" +
                 "&REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0" +
@@ -112,7 +145,7 @@
                 "&TILEROW={y}&TILECOL={x}",
                 {
                     minZoom: 0,
-                    maxZoom: 18,
+                    maxZoom: 19,
                     attribution: "IGN-F/Geoportail",
                     tileSize: 256
                 }
@@ -121,12 +154,12 @@
             controlOpacity: true
         },
         {
-            name: "Carte 1922",
+            name: "Photos 1922",
             layer: L.tileLayer('https://github.com/peltiern/cartographie-saint-michel/raw/main/1922/{z}/{x}/{y}.png', {
                 minZoom: 12,
-                maxZoom: 18,
+                maxZoom: 19,
                 tms: false,
-                attribution: 'Créé avec QGIS | Nicolas PELTIER | Blason par <a href="//commons.wikimedia.org/wiki/User:Celbusro" title="User:Celbusro" target="_blank">Celbusro</a> — <span class="int-own-work" lang="fr">Travail personnel</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0" target="_blank">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=35491899" target="_blank">Lien</a>'
+                attribution: 'Créé avec <a href="https://qgis.org/" title="QGIS" target="_blank">QGIS</a> | <a href="https://github.com/peltiern/cartographie-saint-michel" title="Nicolas PELTIER" target="_blank">Nicolas PELTIER</a> | Blason par <a href="//commons.wikimedia.org/wiki/User:Celbusro" title="User:Celbusro" target="_blank">Celbusro</a> — <span class="int-own-work" lang="fr">Travail personnel</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0" target="_blank">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=35491899" target="_blank">Lien</a>'
             }).addTo(map),
             defaultOpacity: 1,
             controlOpacity: true
@@ -180,7 +213,7 @@
 
     var keyPoints = L.layerGroup([eglise, ecolePrimaire, centreCommercial, stade, college, hopital]);
     layers.push({
-        name: "Points remarquables",
+        name: "Lieux remarquables",
         layer: keyPoints,
         defaultOpacity: 0,
         controlOpacity: false
