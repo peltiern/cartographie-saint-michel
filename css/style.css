@@ -1,0 +1,53 @@
+html, body, #map {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.control-panel {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 220px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    font-family: sans-serif;
+    font-size: 13px;
+    z-index: 1000;
+}
+
+.control-header {
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+}
+
+.icon-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-content {
+    padding: 8px 12px;
+    display: block;
+}
+
+.layer-group label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.layer-group input[type="range"] {
+    width: 100%;
+}
+
+.leaflet-control-navbar-home {
+    background-image: url("../img/home.png");
+    background-size: contain;
+}
