@@ -4,33 +4,45 @@
     <title>Cartographie de Saint-Michel (16470 - France)</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!--    <meta property="og:title" content="Cartographie de Saint-Michel (16470 - France)">-->
-<!--    <meta property="og:description" content="Photographies aériennes de la commune de Saint-Michel (164710) : années 1922, 1948">-->
-<!--    <meta property="og:image" content="https://tonsite.com/images/aperçu.jpg">-->
-<!--    <meta property="og:url" content="https://peltiern.github.io/cartographie-saint-michel/">-->
-<!--    <meta property="og:type" content="website">-->
-<!--    <meta property="og:site_name" content="Cartographie de Saint-Michel (16470 - France)">-->
+        <meta property="og:title" content="Cartographie de Saint-Michel (16470 - France)">
+        <meta property="og:description" content="Photographies aériennes de la commune de Saint-Michel (164710) : années 1922, 1948">
+        <meta property="og:image" content="https://peltiern.github.io/cartographie-saint-michel/img/logo-application.png">
+        <meta property="og:url" content="https://peltiern.github.io/cartographie-saint-michel/">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="Cartographie de Saint-Michel (16470 - France)">
     <link rel="icon" href="img/favicon.ico"/>
     <link rel="stylesheet" href="css/style.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"crossorigin=""></script>
     <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
     <link rel="stylesheet" href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'/>
+    <style>
+        #timelineSliderContainer {
+            margin: 1em;
+            padding: 0.5em;
+            background: rgba(255,255,255,0.8);
+            border-radius: 0.5em;
+        }
+
+        #yearLabel {
+            display: block;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+
+        #timelineSlider {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 <div id="map"></div>
 
 <!-- Panneau de contrôle -->
-<div class="control-panel">
-    <div class="control-header" onclick="togglePanel()">
-    <span class="icon-text">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25" fill="#000">
-        <path d="M3.5 9.5L12 14l8.5-4.5L12 5 3.5 9.5zM12 15.5l-8.5-4.5v2l8.5 4.5 8.5-4.5v-2l-8.5 4.5zM12 19.5l-8.5-4.5v2l8.5 4.5 8.5-4.5v-2l-8.5 4.5z"/>
-      </svg>
-      <span>Couches</span>
-    </span>
-    </div>
-    <div class="control-content" id="layerControl"></div>
+<div id="timelineSliderContainer" class="control-panel">
+    <span id="yearLabel">Année : 2022</span>
+    <input type="range" id="timelineSlider" min="0" max="7" step="0.01" value="0"/>
 </div>
 
 <script>
@@ -68,8 +80,10 @@
         onAdd: function (map) {
             var img = L.DomUtil.create('img');
 
-            img.src = './img/blason-saint-michel.svg';
-            img.style.width = '50px';
+            img.src = './img/logo-application.png';
+            img.style.width = '80px';
+            img.style.backgroundColor = 'rgba(255,255,255,0.56)';
+            img.style.borderRadius = '45px';
 
             return img;
         },
@@ -252,62 +266,62 @@
             defaultOpacity: 1,
             controlOpacity: true
         },
-        {
-            name: "Batîments actuels",
-            layer: L.tileLayer(
-                "https://igngp.geoapi.fr/tile.php/batiments/{z}/{x}/{y}.png",
-                {
-                    minZoom: 0,
-                    maxZoom: 19,
-                    attribution: "IGN-F/Geoportail",
-                    tileSize: 256
-                }
-            ).addTo(map),
-            defaultOpacity: 0,
-            controlOpacity: true
-        },
-        {
-            name: "Cadastre actuel",
-            layer: L.tileLayer(
-                "https://igngp.geoapi.fr/tile.php/parcelles-cadastrales/{z}/{x}/{y}.png",
-                {
-                    minZoom: 0,
-                    maxZoom: 19,
-                    attribution: "IGN-F/Geoportail",
-                    tileSize: 256
-                }
-            ).addTo(map),
-            defaultOpacity: 0,
-            controlOpacity: true
-        },
-        {
-            name: "Routes actuelles",
-            layer: L.tileLayer(
-                "https://igngp.geoapi.fr/tile.php/routes/{z}/{x}/{y}.png",
-                {
-                    minZoom: 0,
-                    maxZoom: 19,
-                    attribution: "IGN-F/Geoportail",
-                    tileSize: 256
-                }
-            ).addTo(map),
-            defaultOpacity: 0,
-            controlOpacity: true
-        },
-        {
-            name: "Limites administratives",
-            layer: L.tileLayer(
-                "https://igngp.geoapi.fr/tile.php/limites-administratives/{z}/{x}/{y}.png",
-                {
-                    minZoom: 0,
-                    maxZoom: 19,
-                    attribution: "IGN-F/Geoportail",
-                    tileSize: 256
-                }
-            ).addTo(map),
-            defaultOpacity: 0,
-            controlOpacity: true
-        }
+        // {
+        //     name: "Batîments actuels",
+        //     layer: L.tileLayer(
+        //         "https://igngp.geoapi.fr/tile.php/batiments/{z}/{x}/{y}.png",
+        //         {
+        //             minZoom: 0,
+        //             maxZoom: 19,
+        //             attribution: "IGN-F/Geoportail",
+        //             tileSize: 256
+        //         }
+        //     ).addTo(map),
+        //     defaultOpacity: 0,
+        //     controlOpacity: true
+        // },
+        // {
+        //     name: "Cadastre actuel",
+        //     layer: L.tileLayer(
+        //         "https://igngp.geoapi.fr/tile.php/parcelles-cadastrales/{z}/{x}/{y}.png",
+        //         {
+        //             minZoom: 0,
+        //             maxZoom: 19,
+        //             attribution: "IGN-F/Geoportail",
+        //             tileSize: 256
+        //         }
+        //     ).addTo(map),
+        //     defaultOpacity: 0,
+        //     controlOpacity: true
+        // },
+        // {
+        //     name: "Routes actuelles",
+        //     layer: L.tileLayer(
+        //         "https://igngp.geoapi.fr/tile.php/routes/{z}/{x}/{y}.png",
+        //         {
+        //             minZoom: 0,
+        //             maxZoom: 19,
+        //             attribution: "IGN-F/Geoportail",
+        //             tileSize: 256
+        //         }
+        //     ).addTo(map),
+        //     defaultOpacity: 0,
+        //     controlOpacity: true
+        // },
+        // {
+        //     name: "Limites administratives",
+        //     layer: L.tileLayer(
+        //         "https://igngp.geoapi.fr/tile.php/limites-administratives/{z}/{x}/{y}.png",
+        //         {
+        //             minZoom: 0,
+        //             maxZoom: 19,
+        //             attribution: "IGN-F/Geoportail",
+        //             tileSize: 256
+        //         }
+        //     ).addTo(map),
+        //     defaultOpacity: 0,
+        //     controlOpacity: true
+        // }
     ];
 
     // Points remarquables (https://apidocs.geoapify.com/playground/icon/)
@@ -363,63 +377,38 @@
         controlOpacity: false
     });
 
-    const controlContainer = document.getElementById("layerControl");
+    const aerialLayers = layers.filter(l => l.name.startsWith("Photos")).reverse();
+    const timelineSlider = document.getElementById("timelineSlider");
+    const yearLabel = document.getElementById("yearLabel");
 
-    layers.forEach(({name, layer, defaultOpacity, controlOpacity}, index) => {
-        const group = document.createElement("div");
-        group.className = "layer-group";
+    const yearNames = aerialLayers.map(l => l.name.replace("Photos ", "").trim());
+    timelineSlider.max = aerialLayers.length - 1;
 
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = defaultOpacity === 1;
-        checkbox.id = `layer-${index}`;
+    aerialLayers.forEach(({layer}) => layer.setOpacity(0));
 
-        const slider = document.createElement("input");
+    function updateTimelineSlider(value) {
+        const index = Math.floor(value);
+        const fraction = value - index;
 
-        const label = document.createElement("label");
-        label.htmlFor = checkbox.id;
-        label.innerHTML = `<span>${name}</span>`;
-        label.prepend(checkbox);
-        group.appendChild(label);
-
-        checkbox.onchange = () => {
-            if (checkbox.checked) {
-                if (controlOpacity) {
-                    layer.setOpacity(parseFloat(slider.value));
-                } else {
-                    layer.addTo(map);
-                }
+        aerialLayers.forEach(({layer}, i) => {
+            if (i === index) {
+                layer.setOpacity(1 - fraction);
+            } else if (i === index + 1) {
+                layer.setOpacity(fraction);
             } else {
-                if (controlOpacity) {
-                    layer.setOpacity(0);
-                } else {
-                    map.removeLayer(layer);
-                }
+                layer.setOpacity(0);
             }
-        };
+        });
 
-        if (controlOpacity) {
-            slider.type = "range";
-            slider.min = 0;
-            slider.max = 1;
-            slider.step = 0.01;
-            slider.value = defaultOpacity;
+        const displayYear = fraction < 0.5 ? yearNames[index] : yearNames[index + 1] || yearNames[index];
+        yearLabel.textContent = `Année : ${displayYear}`;
+    }
 
-            slider.oninput = () => {
-                if (checkbox.checked) {
-                    layer.setOpacity(parseFloat(slider.value));
-                }
-            };
+    // Initial display
+    updateTimelineSlider(parseFloat(timelineSlider.value));
 
-            group.appendChild(slider);
-        }
-
-        // Set initial opacity si c'est une couche de type GeoJSON
-        if (controlOpacity) {
-            layer.setOpacity(defaultOpacity);
-        }
-
-        controlContainer.appendChild(group);
+    timelineSlider.addEventListener("input", (e) => {
+        updateTimelineSlider(parseFloat(e.target.value));
     });
 </script>
 
