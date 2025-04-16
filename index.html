@@ -175,17 +175,67 @@
             controlOpacity: true
         },
         {
-            name: "Photos actuelles",
-            layer: L.tileLayer(
-                "https://igngp.geoapi.fr/tile.php/ortho/{z}/{x}/{y}.png",
-                {
-                    minZoom: 0,
-                    maxZoom: 19,
-                    attribution: "IGN-F/Geoportail",
-                    tileSize: 256
-                }
-            ).addTo(map),
+            name: "Photos 1922",
+            layer: L.tileLayer('https://github.com/peltiern/cartographie-saint-michel/raw/main/1922/{z}/{x}/{y}.png', {
+                minZoom: 12,
+                maxZoom: 19,
+                tms: false,
+                attribution: 'Créé avec <a href="https://qgis.org/" title="QGIS" target="_blank">QGIS</a> | <a href="https://github.com/peltiern/cartographie-saint-michel" title="Nicolas PELTIER" target="_blank">Nicolas PELTIER</a> | Blason par <a href="//commons.wikimedia.org/wiki/User:Celbusro" title="User:Celbusro" target="_blank">Celbusro</a> — <span class="int-own-work" lang="fr">Travail personnel</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0" target="_blank">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=35491899" target="_blank">Lien</a>'
+            }).addTo(map),
             defaultOpacity: 1,
+            controlOpacity: true
+        },
+        {
+            name: "Photos 1948",
+            layer: L.tileLayer('https://github.com/peltiern/cartographie-saint-michel/raw/main/1948/{z}/{x}/{y}.png', {
+                minZoom: 12,
+                maxZoom: 19,
+                tms: false,
+                attribution: 'Créé avec <a href="https://qgis.org/" title="QGIS" target="_blank">QGIS</a> | <a href="https://github.com/peltiern/cartographie-saint-michel" title="Nicolas PELTIER" target="_blank">Nicolas PELTIER</a> | Blason par <a href="//commons.wikimedia.org/wiki/User:Celbusro" title="User:Celbusro" target="_blank">Celbusro</a> — <span class="int-own-work" lang="fr">Travail personnel</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0" target="_blank">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=35491899" target="_blank">Lien</a>'
+            }).addTo(map),
+            defaultOpacity: 0,
+            controlOpacity: true
+        },
+        {
+            name: "Photos 1950-1965",
+            layer: L.tileLayer(
+                    "https://igngp.geoapi.fr/tile.php/orthos1950-1965/{z}/{x}/{y}.png",
+                    {
+                        minZoom: 0,
+                        maxZoom: 19,
+                        attribution: "IGN-F/Geoportail",
+                        tileSize: 256
+                    }
+            ).addTo(map),
+            defaultOpacity: 0,
+            controlOpacity: true
+        },
+        {
+            name: "Photos 2000-2005",
+            layer: L.tileLayer(
+                    "https://igngp.geoapi.fr/tile.php/orthos2000-2005/{z}/{x}/{y}.png",
+                    {
+                        minZoom: 0,
+                        maxZoom: 19,
+                        attribution: "IGN-F/Geoportail",
+                        tileSize: 256
+                    }
+            ).addTo(map),
+            defaultOpacity: 0,
+            controlOpacity: true
+        },
+        {
+            name: "Photos 2006-2010",
+            layer: L.tileLayer(
+                    "https://igngp.geoapi.fr/tile.php/orthos2006-2010/{z}/{x}/{y}.png",
+                    {
+                        minZoom: 0,
+                        maxZoom: 19,
+                        attribution: "IGN-F/Geoportail",
+                        tileSize: 256
+                    }
+            ).addTo(map),
+            defaultOpacity: 0,
             controlOpacity: true
         },
         {
@@ -203,69 +253,19 @@
             controlOpacity: true
         },
         {
-            name: "Photos 2006-2010",
+            name: "Photos actuelles",
             layer: L.tileLayer(
-                "https://igngp.geoapi.fr/tile.php/orthos2006-2010/{z}/{x}/{y}.png",
-                {
-                    minZoom: 0,
-                    maxZoom: 19,
-                    attribution: "IGN-F/Geoportail",
-                    tileSize: 256
-                }
+                    "https://igngp.geoapi.fr/tile.php/ortho/{z}/{x}/{y}.png",
+                    {
+                        minZoom: 0,
+                        maxZoom: 19,
+                        attribution: "IGN-F/Geoportail",
+                        tileSize: 256
+                    }
             ).addTo(map),
-            defaultOpacity: 0,
-            controlOpacity: true
-        },
-        {
-            name: "Photos 2000-2005",
-            layer: L.tileLayer(
-                "https://igngp.geoapi.fr/tile.php/orthos2000-2005/{z}/{x}/{y}.png",
-                {
-                    minZoom: 0,
-                    maxZoom: 19,
-                    attribution: "IGN-F/Geoportail",
-                    tileSize: 256
-                }
-            ).addTo(map),
-            defaultOpacity: 0,
-            controlOpacity: true
-        },
-        {
-            name: "Photos 1950-1965",
-            layer: L.tileLayer(
-                "https://igngp.geoapi.fr/tile.php/orthos1950-1965/{z}/{x}/{y}.png",
-                {
-                    minZoom: 0,
-                    maxZoom: 19,
-                    attribution: "IGN-F/Geoportail",
-                    tileSize: 256
-                }
-            ).addTo(map),
-            defaultOpacity: 0,
-            controlOpacity: true
-        },
-        {
-            name: "Photos 1948",
-            layer: L.tileLayer('https://github.com/peltiern/cartographie-saint-michel/raw/main/1948/{z}/{x}/{y}.png', {
-                minZoom: 12,
-                maxZoom: 19,
-                tms: false,
-                attribution: 'Créé avec <a href="https://qgis.org/" title="QGIS" target="_blank">QGIS</a> | <a href="https://github.com/peltiern/cartographie-saint-michel" title="Nicolas PELTIER" target="_blank">Nicolas PELTIER</a> | Blason par <a href="//commons.wikimedia.org/wiki/User:Celbusro" title="User:Celbusro" target="_blank">Celbusro</a> — <span class="int-own-work" lang="fr">Travail personnel</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0" target="_blank">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=35491899" target="_blank">Lien</a>'
-            }).addTo(map),
-            defaultOpacity: 0,
-            controlOpacity: true
-        },
-        {
-            name: "Photos 1922",
-            layer: L.tileLayer('https://github.com/peltiern/cartographie-saint-michel/raw/main/1922/{z}/{x}/{y}.png', {
-                minZoom: 12,
-                maxZoom: 19,
-                tms: false,
-                attribution: 'Créé avec <a href="https://qgis.org/" title="QGIS" target="_blank">QGIS</a> | <a href="https://github.com/peltiern/cartographie-saint-michel" title="Nicolas PELTIER" target="_blank">Nicolas PELTIER</a> | Blason par <a href="//commons.wikimedia.org/wiki/User:Celbusro" title="User:Celbusro" target="_blank">Celbusro</a> — <span class="int-own-work" lang="fr">Travail personnel</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0" target="_blank">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=35491899" target="_blank">Lien</a>'
-            }).addTo(map),
             defaultOpacity: 1,
             controlOpacity: true
-        },
+        }
         // {
         //     name: "Batîments actuels",
         //     layer: L.tileLayer(
@@ -377,7 +377,7 @@
         controlOpacity: false
     });
 
-    const aerialLayers = layers.filter(l => l.name.startsWith("Photos")).reverse();
+    const aerialLayers = layers.filter(l => l.name.startsWith("Photos"));
     const timelineSlider = document.getElementById("timelineSlider");
     const yearLabel = document.getElementById("yearLabel");
 
@@ -391,11 +391,17 @@
         const fraction = value - index;
 
         aerialLayers.forEach(({layer}, i) => {
-            if (i === index) {
-                layer.setOpacity(1 - fraction);
+            if (i < index) {
+                // Anciennes couches : entièrement visibles
+                layer.setOpacity(1);
+            } else if (i === index) {
+                // Couche en cours : entièrement visible
+                layer.setOpacity(1);
             } else if (i === index + 1) {
+                // Couche suivante : interpolation progressive
                 layer.setOpacity(fraction);
             } else {
+                // Toutes les autres : invisibles
                 layer.setOpacity(0);
             }
         });
