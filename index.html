@@ -39,12 +39,6 @@
 <body>
 <div id="map"></div>
 
-<!-- Panneau de contrôle -->
-<div id="timelineSliderContainer" class="control-panel">
-    <span id="yearLabel">Année : 2022</span>
-    <input type="range" id="timelineSlider" min="0" max="7" step="0.01" value="0"/>
-</div>
-
 <script>
     function togglePanel() {
         const content = document.getElementById("layerControl");
@@ -163,6 +157,54 @@
     };
     L.control.navbar().addTo(map);
 
+    L.Control.TimelineSlider = L.Control.extend({
+        onAdd: function(map) {
+            const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+
+            container.style.background = 'rgba(255,255,255,0.9)';
+            container.style.padding = '10px';
+            container.style.borderRadius = '8px';
+            container.style.width = '250px';
+
+            container.innerHTML = `
+            <label id="yearLabel" style="display:block; text-align:center; font-weight:bold; margin-bottom:0.5em;">Année : </label>
+            <input id="timelineSlider" type="range" min="0" max="7" step="0.01" value="0" style="width:100%;">
+            <hr style="margin: 1em 0;">
+            <label for="batimentOpacity">Opacité Bâtiments</label>
+            <input type="range" id="batimentOpacity" min="0" max="1" step="0.01" value="0.5"/>
+
+            <label for="routesOpacity">Opacité Routes</label>
+            <input type="range" id="routesOpacity" min="0" max="1" step="0.01" value="0.5"/>
+            <br/>
+            <label>
+                <input type="checkbox" id="toggleKeyPoints" />
+                Lieux remarquables
+            </label>
+        `;
+
+            // Stop click from propagating to the map
+            L.DomEvent.disableClickPropagation(container);
+            L.DomEvent.disableScrollPropagation(container);
+
+            return container;
+        }
+    });
+
+    L.control.timelineSlider = function(opts) {
+        return new L.Control.TimelineSlider(opts);
+    }
+
+    L.control.timelineSlider({ position: 'topright' }).addTo(map);
+
+    map.on("load", () => {
+        const timelineSlider = document.getElementById("timelineSlider");
+        updateTimelineSlider(parseFloat(timelineSlider.value));
+        timelineSlider.addEventListener("input", (e) => {
+            updateTimelineSlider(parseFloat(e.target.value));
+        });
+    });
+
+
     // https://igngp.geoapi.fr/tile.php
     const layers = [
         {
@@ -265,21 +307,21 @@
             ).addTo(map),
             defaultOpacity: 1,
             controlOpacity: true
-        }
-        // {
-        //     name: "Batîments actuels",
-        //     layer: L.tileLayer(
-        //         "https://igngp.geoapi.fr/tile.php/batiments/{z}/{x}/{y}.png",
-        //         {
-        //             minZoom: 0,
-        //             maxZoom: 19,
-        //             attribution: "IGN-F/Geoportail",
-        //             tileSize: 256
-        //         }
-        //     ).addTo(map),
-        //     defaultOpacity: 0,
-        //     controlOpacity: true
-        // },
+        },
+        {
+            name: "Batîments actuels",
+            layer: L.tileLayer(
+                "https://igngp.geoapi.fr/tile.php/batiments/{z}/{x}/{y}.png",
+                {
+                    minZoom: 0,
+                    maxZoom: 19,
+                    attribution: "IGN-F/Geoportail",
+                    tileSize: 256
+                }
+            ).addTo(map),
+            defaultOpacity: 0,
+            controlOpacity: true
+        },
         // {
         //     name: "Cadastre actuel",
         //     layer: L.tileLayer(
@@ -294,20 +336,20 @@
         //     defaultOpacity: 0,
         //     controlOpacity: true
         // },
-        // {
-        //     name: "Routes actuelles",
-        //     layer: L.tileLayer(
-        //         "https://igngp.geoapi.fr/tile.php/routes/{z}/{x}/{y}.png",
-        //         {
-        //             minZoom: 0,
-        //             maxZoom: 19,
-        //             attribution: "IGN-F/Geoportail",
-        //             tileSize: 256
-        //         }
-        //     ).addTo(map),
-        //     defaultOpacity: 0,
-        //     controlOpacity: true
-        // },
+        {
+            name: "Routes actuelles",
+            layer: L.tileLayer(
+                "https://igngp.geoapi.fr/tile.php/routes/{z}/{x}/{y}.png",
+                {
+                    minZoom: 0,
+                    maxZoom: 19,
+                    attribution: "IGN-F/Geoportail",
+                    tileSize: 256
+                }
+            ).addTo(map),
+            defaultOpacity: 0,
+            controlOpacity: true
+        },
         // {
         //     name: "Limites administratives",
         //     layer: L.tileLayer(
@@ -373,13 +415,37 @@
     layers.push({
         name: "Lieux remarquables",
         layer: keyPoints,
-        defaultOpacity: 0,
+        defaultOpacity: 1,
         controlOpacity: false
     });
 
+    // Récupération des éléments
+    const batimentOpacitySlider = document.getElementById("batimentOpacity");
+    const routesOpacitySlider = document.getElementById("routesOpacity");
+    const toggleKeyPointsCheckbox = document.getElementById("toggleKeyPoints");
+
+    // Récupérer les couches spécifiques
+    const batimentLayer = layers.find(l => l.name === "Batîments actuels").layer;
+    const routesLayer = layers.find(l => l.name === "Routes actuelles").layer;
+
+    // Écouteurs de changement d'opacité
+    batimentOpacitySlider.addEventListener("input", (e) => {
+        batimentLayer.setOpacity(parseFloat(e.target.value));
+    });
+    routesOpacitySlider.addEventListener("input", (e) => {
+        routesLayer.setOpacity(parseFloat(e.target.value));
+    });
+
+    // Écouteur pour activer/désactiver les lieux remarquables
+    toggleKeyPointsCheckbox.addEventListener("change", (e) => {
+        if (e.target.checked) {
+            keyPoints.addTo(map);
+        } else {
+            map.removeLayer(keyPoints);
+        }
+    });
+
     const aerialLayers = layers.filter(l => l.name.startsWith("Photos"));
-    const timelineSlider = document.getElementById("timelineSlider");
-    const yearLabel = document.getElementById("yearLabel");
 
     const yearNames = aerialLayers.map(l => l.name.replace("Photos ", "").trim());
     timelineSlider.max = aerialLayers.length - 1;

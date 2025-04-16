@@ -51,3 +51,13 @@ html, body, #map {
     background-image: url("../img/home.png");
     background-size: contain;
 }
+
+#timelineSliderContainer label {
+    display: block;
+    margin: 0.5em 0 0.25em;
+    font-size: 0.9em;
+}
+
+#timelineSliderContainer input[type="range"] {
+    width: 100%;
+}
