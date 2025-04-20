@@ -23,8 +23,8 @@ jobs:
         run: |
           rm -rf 1922 1948 1949
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload Pages Artifact
+        uses: actions/upload-artifact@v2
         with:
           path: .
 
