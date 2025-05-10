@@ -219,6 +219,17 @@
             controlOpacity: true
         },
         {
+            name: "Plans 1823",
+            layer: L.tileLayer('https://github.com/peltiern/cartographie-saint-michel/raw/main/1922/{z}/{x}/{y}.png', {
+                minZoom: 12,
+                maxZoom: 18,
+                tms: false,
+                attribution: 'Créé avec <a href="https://qgis.org/" title="QGIS" target="_blank">QGIS</a> | <a href="https://github.com/peltiern/cartographie-saint-michel" title="Nicolas PELTIER" target="_blank">Nicolas PELTIER</a> | Blason par <a href="//commons.wikimedia.org/wiki/User:Celbusro" title="User:Celbusro" target="_blank">Celbusro</a> — <span class="int-own-work" lang="fr">Travail personnel</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0" target="_blank">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=35491899" target="_blank">Lien</a>'
+            }).addTo(map),
+            defaultOpacity: 1,
+            controlOpacity: true
+        },
+        {
             name: "Photos 1922",
             layer: L.tileLayer('https://github.com/peltiern/cartographie-saint-michel/raw/main/1922/{z}/{x}/{y}.png', {
                 minZoom: 12,
@@ -458,9 +469,9 @@
         }
     });
 
-    const aerialLayers = layers.filter(l => l.name.startsWith("Photos"));
+    const aerialLayers = layers.filter(l => l.name.startsWith("Photos") || l.name.startsWith("Plans"));
 
-    const yearNames = aerialLayers.map(l => l.name.replace("Photos ", "").trim());
+    const yearNames = aerialLayers.map(l => l.name.replace("Photos ", "").replace("Plans ", "").trim());
     timelineSlider.max = aerialLayers.length - 1;
 
     aerialLayers.forEach(({layer}) => layer.setOpacity(0));
